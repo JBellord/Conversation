@@ -4,17 +4,23 @@ import { ArrowUpIcon, ThickArrowUpIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { sendMessage } from "@/func/action";
-import { useState } from "react";
+import { useStore } from "@/func/store/message";
 
 export default function ChatInput() {
-  const [value, setValue] = useState("");
+  const setLoading = useStore((state) => state.setLoading);
+  const setMessages = useStore((state) => state.setMessages);
+  const addMessage = useStore((state) => state.addMessage);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let message = e.target.chatInput.value;
-    setValue(message);
-    sendMessage(message);
+    document.getElementById("endList").scrollIntoView({ behavior: "smooth" });
+    setLoading(true);
+    const mess = e.target.chatInput.value;
     e.target.reset();
+    const messages = await sendMessage(mess);
+    setMessages(messages);
+    setLoading(false);
+    document.getElementById("endList").scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -24,7 +30,7 @@ export default function ChatInput() {
         className="group w-full flex items-center rounded-full py-1 px-4 border border-zinc-600"
       >
         <Input
-          className="py-0 px3 text-md w-full h-12 rounded-full ring-0 border-0 focus-visible:ring-0"
+          className="py-0 px3 text-md w-full h-10 rounded-full ring-0 border-0 focus-visible:ring-0"
           placeholder="Chat with the bot..."
           type="text"
           name="chatInput"
@@ -32,7 +38,7 @@ export default function ChatInput() {
         />
 
         <Button
-          className="group bg-transparent rounded-full group-hover:bg-background group-hover:border "
+          className="group bg-transparent rounded-full group-hover:bg-background "
           size="icon"
           type="submit"
         >

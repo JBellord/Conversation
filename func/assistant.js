@@ -1,4 +1,9 @@
+import "dotenv/config";
+
 import openai from "./config";
+
+const assistantId = process.env.NEXT_PUBLIC_ASSISTANT_ID;
+const threadId = process.env.NEXT_PUBLIC_THREAD_ID;
 
 const startAssistant = async () => {
   const assistant = await openai.beta.assistants.create({
@@ -16,7 +21,7 @@ const startThread = async () => {
   return thread;
 };
 
-const addMessage = async (threadId, chat) => {
+const addMessage = async (chat) => {
   const message = await openai.beta.threads.messages.create(threadId, {
     role: "user",
     content: chat,
@@ -24,7 +29,7 @@ const addMessage = async (threadId, chat) => {
   return message;
 };
 
-const runAssistant = async (assistantId, threadId) => {
+const runAssistant = async () => {
   const run = await openai.beta.threads.runs.create(threadId, {
     assistant_id: assistantId,
   });
@@ -32,21 +37,43 @@ const runAssistant = async (assistantId, threadId) => {
   return run;
 };
 
-const getMessages = async (threadId) => {
-  const messages = await openai.beta.threads.messages.list(threadId);
-  return messages;
+const getMessages = async () => {
+  //console.log(`NInjas Key: ${process.env.NINJA_KEY}`);
+  const messages = await openai.beta.threads.messages.list(threadId, {
+    order: "asc",
+  });
+  // console.log(messages.data[0].content);
+  return messages.data;
 };
 
-const getRunStatus = async (threadId, runId) => {
+const getRunStatus = async (runId) => {
   const runstatus = await openai.beta.threads.runs.retrieve(threadId, runId);
   return runstatus;
+};
+
+const delThread = async () => {
+  const res = await openai.beta.threads.del(threadId);
+
+  console.log(res);
+};
+
+const getFacts = async () => {
+  // console.log(`NInjas Key: ${process.env.NINJA_KEY}`);
+  const res = await fetch("https://api.api-ninjas.com/v1/facts?limit=1", {
+    headers: {
+      "X-Api-Key": process.env.NINJA_KEY,
+    },
+  });
+  return res.json();
 };
 
 export {
   startAssistant,
   startThread,
+  delThread,
   addMessage,
   runAssistant,
   getMessages,
   getRunStatus,
+  getFacts,
 };
