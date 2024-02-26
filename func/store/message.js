@@ -5,10 +5,10 @@ export const useStore = create((set) => ({
   loading: false,
   setLoading: (bool) => set((state) => ({ loading: bool })),
   messages: [],
-  addMessage: (newMessage) =>
-    set((state) => ({ messages: [state.messages, newMessage] })),
+  addMessage: (newMessages) =>
+    set((state) => ({ messages: [...state.messages, ...newMessages] })),
   setMessages: (newMessages) =>
-    set((state) => ({ messages: [state.messages, ...newMessages] })),
+    set((state) => ({ messages: [...state.messages, ...newMessages] })),
   fetchMessages: async () => {
     const res = await getMessages();
     set({ messages: res });

@@ -41,6 +41,7 @@ const getMessages = async () => {
   //console.log(`NInjas Key: ${process.env.NINJA_KEY}`);
   const messages = await openai.beta.threads.messages.list(threadId, {
     order: "asc",
+    limit: 100,
   });
   // console.log(messages.data[0].content);
   return messages.data;

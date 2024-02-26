@@ -25,5 +25,5 @@ export async function sendMessage(formData) {
     }
   }
   const messages = await getMessages();
-  return messages;
+  return messages.slice(-2);
 }

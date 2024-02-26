@@ -6,5 +6,9 @@ export const metadata = {
 };
 
 export default function ChatLayout({ children }) {
-  return <div className="max-h-screen h-screen w-full p-0 m-0">{children}</div>;
+  return (
+    <div className="max-h-screen h-screen w-full bg-primary p-0 m-0">
+      {children}
+    </div>
+  );
 }

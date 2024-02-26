@@ -8,16 +8,17 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 
-export default function ChatList({ data }) {
+export default function ChatList() {
   const endRef = useRef(null);
   const loading = useStore((state) => state.loading);
   const messages = useStore((state) => state.messages);
-  const setMessages = useStore((state) => state.setMessages);
+  const fetchMessages = useStore((state) => state.fetchMessages);
 
   useEffect(() => {
-    setMessages(data);
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [data]);
+    if (endRef.current) {
+      endRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   function checkText(e) {
     if (e === undefined) {
@@ -31,9 +32,9 @@ export default function ChatList({ data }) {
     } else return e.content[0].text.value;
   }
   return (
-    <div className="z-5 relative h-[90vh] w-full m-auto pt-6 pb-2 px-4 flex flex-col flex-nowrap items-center overflow-x-hidden overflow-y-auto">
+    <div className="z-5 relative h-full w-full m-auto pt-6 pb-2 px-4 flex flex-col flex-nowrap items-center overflow-x-hidden overflow-y-auto">
       {messages &&
-        messages.slice(1).map((e, i) => {
+        messages?.slice(1).map((e, i) => {
           return (
             <Chat
               key={i}
@@ -54,16 +55,16 @@ export default function ChatList({ data }) {
 
 function Chat({ name, text, role }) {
   return (
-    <div className="px-2 py-4 flex w-full border-b border-zinc-700 md:w-1/2">
-      <div className="max-w-24 w-16 p-0">
-        <Avatar>
+    <div className="px-0 py-6 flex w-full border-b border-zinc-800 md:w-1/2">
+      <div className="max-w-24 w-12 p-0 mr-4">
+        <Avatar className="rounded-sm">
           <AvatarImage src={`https://github.com/${name}.png`} />
           <AvatarFallback>{role}</AvatarFallback>
         </Avatar>
       </div>
       <div className="w-full h-fit">
         <div className="font-semibold mb-1">{name}</div>
-        <div className="leading-loose font-sm font-light">
+        <div className="leading-loose font-sm font-light whitespace-normal">
           <Markdown remarkPlugins={[remarkGfm, remarkBreaks]}>{text}</Markdown>
         </div>
       </div>

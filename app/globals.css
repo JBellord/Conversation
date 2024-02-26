@@ -87,7 +87,7 @@
 
 ::-webkit-scrollbar-thumb {
   /* Customize the scrollbar thumb */
-  width: 10px;
+  width: 6px;
   border-radius: 10px;
-  background-color: #3f3f46;
+  background-color: #3f3f4654;
 }
